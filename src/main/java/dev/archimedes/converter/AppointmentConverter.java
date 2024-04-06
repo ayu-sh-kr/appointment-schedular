@@ -8,12 +8,25 @@ import dev.archimedes.utils.contracts.Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is responsible for converting between {@link Appointment} entities and {@link AppointmentDTO} data transfer objects.
+ * It implements the {@link Converter} interface, which defines the methods for conversion.
+ *
+ * @author Ayush Jaiswal
+ */
 @Component
 @RequiredArgsConstructor
 public class AppointmentConverter implements Converter<Appointment, AppointmentDTO> {
 
     private final SlotRepository slotRepository;
 
+    /**
+     * Converts an {@link Appointment} entity to an {@link AppointmentDTO} data transfer object.
+     *
+     * @param appointment the {@link Appointment} entity to convert
+     * @param appointmentDTO the {@link AppointmentDTO} object to populate with data. If null, a new instance will be created.
+     * @return the populated {@link AppointmentDTO} object
+     */
     @Override
     public AppointmentDTO convert(Appointment appointment, AppointmentDTO appointmentDTO) {
 
@@ -48,6 +61,13 @@ public class AppointmentConverter implements Converter<Appointment, AppointmentD
         return appointmentDTO;
     }
 
+    /**
+     * Converts an {@link AppointmentDTO} data transfer object to an {@link Appointment} entity.
+     *
+     * @param appointmentDTO the {@link AppointmentDTO} object to convert
+     * @param appointment the {@link Appointment} entity to populate with data. If null, a new instance will be created.
+     * @return the populated {@link Appointment} entity
+     */
     @Override
     public Appointment revert(AppointmentDTO appointmentDTO, Appointment appointment) {
 

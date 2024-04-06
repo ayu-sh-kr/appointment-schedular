@@ -60,10 +60,18 @@ public class AppointmentService {
         return new ResponseEntity<>(STR."Appointment booked with Id: \{appointment.getAppointmentId()}", HttpStatus.CREATED);
     }
 
+    /**
+     * @return all the appointments from database
+     */
     public ResponseEntity<?> getAppointments(){
         return new ResponseEntity<>(appointmentRepository.findAll(), HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param date it is the booking date for which {@link Appointment} is requested
+     * @return {@link Appointment} from database where the booking date matches
+     */
     public ResponseEntity<?> getAppointments(LocalDate date){
         return new ResponseEntity<>(
                 appointmentRepository.getAppointmentsByDate(date).stream().
@@ -73,6 +81,10 @@ public class AppointmentService {
         );
     }
 
+    /**
+     * @param operatorId it is operator's id who booked the appointment
+     * @return {@link Appointment } for the given operatorId
+     */
     public ResponseEntity<?> getAppointments(String operatorId){
         return new ResponseEntity<>(
                 appointmentRepository.getAppointmentsBySlot_Operator_OperatorId(operatorId)
@@ -82,11 +94,18 @@ public class AppointmentService {
         );
     }
 
+    /**
+     * Checks if the appointment exist for given appointmentId.
+     * If appointment exist then change it's {@link AppointmentStatus} to CANCEL
+     * and {@link SlotStatus} to OPEN
+     * @param appointmentId it the id of the {@link Appointment} for which cancellation have been requested
+     * @return response entity with message for the action happened
+     */
     public ResponseEntity<?> cancel(String appointmentId){
         if(appointmentRepository.existsById(appointmentId)){
             appointmentRepository.updateAppointmentStatusAndGetSlotId(appointmentId, AppointmentStatus.CANCELLED);
             String slotId = appointmentRepository.getSlotIdByAppointmentId(appointmentId);
-            slotRepository.updateSlotStatusBySlotId(slotId, SlotStatus.CLOSE);
+            slotRepository.updateSlotStatusBySlotId(slotId, SlotStatus.OPEN);
             return new ResponseEntity<>(STR."Appointment with id: \{appointmentId} Cancelled Successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>(STR."No appointment found with id: \{appointmentId}", HttpStatus.BAD_REQUEST);
