@@ -32,6 +32,6 @@ public class AppointmentIdGenerator implements IdentifierGenerator {
         int count = dailyCountEntityRepository.getReferenceById(1).getAppointmentCount();
         dailyCountEntityRepository.updateCountBy1();
 
-        return PREFIX + dateString + "C" + count;
+        return STR."\{PREFIX}\{dateString}C\{count}";
     }
 }
